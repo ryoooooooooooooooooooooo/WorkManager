@@ -13,5 +13,13 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryoooooooooooooooooooooo/WorkManager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ryoooooooooooooooooooooo/WorkManager/issues"
+  },
+  "homepage": "https://github.com/ryoooooooooooooooooooooo/WorkManager#readme"
 }
