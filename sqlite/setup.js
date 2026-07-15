@@ -7,29 +7,29 @@ const db = new DatabaseSync('workManager.db');
 db.exec(`
 PRAGMA foreign_keys = ON; 
 
--- 1. Subjects（教科）テーブル
+-- 1. Subjects
 CREATE TABLE IF NOT EXISTS Subjects(
-  SubjectsId INTEGER PRIMARY KEY AUTOINCREMENT,
-  SubjectsName TEXT NOT NULL,
-  TeacherName TEXT NOT NULL
+  subjectId INTEGER PRIMARY KEY AUTOINCREMENT,
+  subjectName TEXT NOT NULL,
+  teacherName TEXT NOT NULL
 );
 
--- 2. Users（生徒）テーブル
+-- 2. Users
 CREATE TABLE IF NOT EXISTS Users(
   UserId INTEGER PRIMARY KEY AUTOINCREMENT,
-  StudentId INTEGER NOT NULL UNIQUE, 
-  StudentName TEXT NOT NULL
+  studentId INTEGER NOT NULL UNIQUE, 
+  studentName TEXT NOT NULL
 );
 
--- 3. Homework（宿題）テーブル
+-- 3. Homework
 CREATE TABLE IF NOT EXISTS Homework(
   HomeWorkId INTEGER PRIMARY KEY AUTOINCREMENT,
   HomeWorkName TEXT NOT NULL,
-  Deadline TEXT NOT NULL,
-  SubjectsId INTEGER,                
+  limit TEXT NOT NULL,
+  subjectId INTEGER,                
   UserId INTEGER,                    
   
-  -- 外部キーの設定（つづりを正確に合わせる）
+  -- Foreign key
   FOREIGN KEY(SubjectsId) REFERENCES Subjects(SubjectsId),
   FOREIGN KEY(UserId) REFERENCES Users(UserId)
 );
