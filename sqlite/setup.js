@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Subjects(
 
 -- 2. Users
 CREATE TABLE IF NOT EXISTS Users(
-  UserId INTEGER PRIMARY KEY AUTOINCREMENT,
+  userId INTEGER PRIMARY KEY AUTOINCREMENT,
   studentId INTEGER NOT NULL UNIQUE, 
   studentName TEXT NOT NULL
 );
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Homework(
   HomeWorkName TEXT NOT NULL,
   limit TEXT NOT NULL,
   subjectId INTEGER,                
-  UserId INTEGER,                    
+  userId INTEGER,                    
   
   -- Foreign key
   FOREIGN KEY(SubjectsId) REFERENCES Subjects(SubjectsId),
@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS Homework(
 `);
 
 // データの追加
-const insert = db.prepare('INSERT INTO Users ( StudentId, StudentName) VALUES (?, ?)');
-insert.run(114514, 'Martin');
+const insert = db.prepare('INSERT INTO () VALUES ()');　//insert文を書く
+insert.run();  // valueを書く
 
 // データの取得
 const query = db.prepare('SELECT * FROM users');
