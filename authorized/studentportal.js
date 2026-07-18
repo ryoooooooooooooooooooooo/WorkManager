@@ -45,4 +45,4 @@ export async function accountCreateAuthorized(student_id, password) {
   }
 }
 
-accountCreateAuthorized('1514210', 'kirisima');
+accountCreateAuthorized('1234556', 'password');
