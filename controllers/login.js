@@ -1,14 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { studentCreateJudge } from '../authorized/studentCreateJudge.js';
+import { studentJudge } from '../authorized/studentJudge.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const createPagePath = path.join(__dirname, '..', 'ui', 'create.html');
+const loginPagePath = path.join(__dirname, '..', 'ui', 'login.html');
 
-function renderCreatePage(result = '') {
-  const html = readFileSync(createPagePath, 'utf8');
+function renderLoginPage(result = '') {
+  const html = readFileSync(loginPagePath, 'utf8');
 
   if (!result) {
     return html;
@@ -21,14 +21,14 @@ function renderCreatePage(result = '') {
   return html.replace('</body>', `${message}</body>`);
 }
 
-export const getCreate = (req, res) => {
-  res.type('html').send(renderCreatePage());
+export const getLogin = (req, res) => {
+  res.type('html').send(renderLoginPage());
 };
 
-export const postCreate = async (req, res) => {
+export const postLogin = async (req, res) => {
   const student_id = req.body?.student_id ?? '';
   const password = req.body?.password ?? '';
-  const result = await studentCreateJudge(student_id, password);
+  const result = await studentJudge(student_id, password);
 
-  res.type('html').send(renderCreatePage(result));
+  res.type('html').send(renderLoginPage(result));
 };

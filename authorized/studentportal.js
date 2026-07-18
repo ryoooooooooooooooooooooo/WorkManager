@@ -1,6 +1,8 @@
 import { chromium } from 'playwright';
 
 const TARGET_URL = 'https://navi.mars.kanazawa-it.ac.jp/portal/student';
+const SUCCESS_URL = 'https://navi.mars.kanazawa-it.ac.jp/portal/student/KITP0010001';
+const FAILURE_URL = 'https://navi.mars.kanazawa-it.ac.jp/portal/student/inKITP0000001LoginFailed';
 
 export async function accountCreateAuthorized(student_id, password) {
   const browser = await chromium.launch({
@@ -14,29 +16,56 @@ export async function accountCreateAuthorized(student_id, password) {
   try {
     await page.goto(TARGET_URL, { waitUntil: 'domcontentloaded' });
 
-    const loginContainerSelector = '#liginTbl, #loginTbl';
-    await page.locator(loginContainerSelector).first().waitFor({ timeout: 10000 });
+    const loginForm = page.locator('form').filter({
+      has: page.locator('input[name="uid"]')
+    }).first();
+    await loginForm.waitFor({ timeout: 10000 });
 
-    const loginBox = page.locator(loginContainerSelector).first();
-    const studentField = loginBox.locator('input:not([type="password"])').first();
-    const passwordField = loginBox.locator('input[type="password"]').first();
-    const loginButton = page.locator('#StudentLoginBtn').first();
+    const studentField = loginForm.locator('input[name="uid"]');
+    const passwordField = loginForm.locator('input[name="pw"]');
+    const hiddenPasswordField = loginForm.locator('input[name="password"]');
 
     await studentField.waitFor({ timeout: 10000 });
     await passwordField.waitFor({ timeout: 10000 });
-    await studentField.fill(student_id);
-    await passwordField.fill(password);
+    await studentField.fill(String(student_id));
+    await passwordField.fill(String(password));
 
-    const navigationPromise = page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => null);
-    await loginButton.click();
+    if (await hiddenPasswordField.count()) {
+      await hiddenPasswordField.evaluate((element, value) => {
+        element.value = value;
+      }, String(password));
+    }
+
+    const navigationPromise = page.waitForURL(
+      (url) => url.href === SUCCESS_URL || url.href === FAILURE_URL,
+      { timeout: 15000 }
+    ).catch(() => null);
+
+    await loginForm.evaluate((form) => {
+      if (typeof form.requestSubmit === 'function') {
+        form.requestSubmit();
+      } else {
+        form.submit();
+      }
+    });
     await navigationPromise;
 
     const currentUrl = page.url();
+    const result = currentUrl === SUCCESS_URL
+      ? 'success'
+      : currentUrl === FAILURE_URL
+        ? 'failure'
+        : 'unknown';
+
     console.log(JSON.stringify({
       targetUrl: TARGET_URL,
+      successUrl: SUCCESS_URL,
+      failureUrl: FAILURE_URL,
       currentUrl,
-      changed: currentUrl !== TARGET_URL
+      result
     }, null, 2));
+
+    return { result, currentUrl };
   } catch (error) {
     console.error('Student portal login check failed:', error);
     process.exitCode = 1;
@@ -44,5 +73,3 @@ export async function accountCreateAuthorized(student_id, password) {
     await browser.close();
   }
 }
-
-accountCreateAuthorized('1514210', 'kirisima');
