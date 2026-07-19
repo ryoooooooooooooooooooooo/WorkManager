@@ -9,17 +9,17 @@
     <title>Work Manager</title>
     <style>
         #pagetitle{
-            background-color: rgb(231, 231, 235);
+            background-color: rgb(135, 135, 137);
             font-weight:800;
             color:white;
         }
         body{
-            background-color: rgb(238, 238, 241);
+            background-color: rgb(206, 206, 206);
         }
     </style>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Work Manager</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,24 +28,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link" href="#" data-page="login.html">ログイン</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Assignments</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          <a class="nav-link" href="#" data-page="create.html">新規</a>
         </li>
       </ul>
       <form class="d-flex" role="search">
@@ -53,9 +39,25 @@
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
-  </div>
+   </div>
+</nav>
+    <script>
+      document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const page = this.getAttribute('data-page');
+        if (!page) return; 
+        
+        e.preventDefault();         fetch(page)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('content-area').innerHTML = html;
+            });
+    });
+});
+    </script>   
 
-    
-    </body>
-
+<div id="content-area" class="container mt-4">
+<!--open link below nav-bar -->
+</div>
+  </body>
 </html>
