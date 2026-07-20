@@ -33,6 +33,7 @@ export const postLogin = async (req, res) => {
   if (result === 'Success') {
     req.session.authenticated = true;
     req.session.student_id = student_id;
+    req.session.password = password;
     return res.redirect('/home');
   }
 
