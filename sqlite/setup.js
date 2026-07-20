@@ -38,4 +38,20 @@ function initializeDatabase() {
   `);
 }
 
-export { db, initializeDatabase };
+function getHomeworkList(){
+  const query = db.prepare(`
+    SELECT
+      h.HomeWorkId, 
+      h.HomeWorkName, 
+      h.deadline, 
+      s.subjectName, 
+      s.teacherName, 
+      u.studentName 
+    FROM Homework h
+    INNER JOIN Subjects s ON h.subjectId = s.subjectId
+    INNER JOIN Users u ON h.userId = u.userId;
+    `);
+
+    return query.all();
+}
+export { db, initializeDatabase, getHomeworkList};
