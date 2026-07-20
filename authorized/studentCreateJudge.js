@@ -17,15 +17,24 @@ export async function studentCreateJudge(student_id, password) {
     const authResult = await accountCreateAuthorized(student_id, password);
 
     if (authResult?.result === 'success') {
-      const studentSalt = createSalt();
+      // 重複チェック: 同じstudent_idが既に登録されているか確認
+      const checkDuplicate = db.prepare(
+        'SELECT COUNT(*) as count FROM AuthorizedCredentials WHERE studentId = ?'
+      );
+      const duplicateCheck = checkDuplicate.get(student_id);
+
+      // 既に登録されている場合はInsertしない
+      if (duplicateCheck?.count > 0) {
+        return 'Fail';
+      }
+
       const passwordSalt = createSalt();
-      const studentHash = hashValueWithSalt(student_id, studentSalt);
       const passwordHash = hashValueWithSalt(password, passwordSalt);
 
       const insert = db.prepare(
-        'INSERT INTO AuthorizedCredentials (studentIdHash, studentSalt, passwordHash, passwordSalt) VALUES (?, ?, ?, ?)'
+        'INSERT INTO AuthorizedCredentials (studentId, passwordHash, passwordSalt) VALUES (?, ?, ?)'
       );
-      insert.run(studentHash, studentSalt, passwordHash, passwordSalt);
+      insert.run(student_id, passwordHash, passwordSalt);
 
       return 'Success';
     }

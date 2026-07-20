@@ -30,5 +30,11 @@ export const postLogin = async (req, res) => {
   const password = req.body?.password ?? '';
   const result = await studentJudge(student_id, password);
 
+  if (result === 'Success') {
+    req.session.authenticated = true;
+    req.session.student_id = student_id;
+    return res.redirect('/home');
+  }
+
   res.type('html').send(renderLoginPage(result));
 };

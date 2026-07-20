@@ -8,15 +8,16 @@ function hashValueWithSalt(value, salt) {
 export async function studentJudge(student_id, password) {
   try {
     initializeDatabase();
-    const rows = db.prepare('SELECT studentIdHash, studentSalt, passwordHash, passwordSalt FROM AuthorizedCredentials').all();
+    const row = db.prepare('SELECT passwordHash, passwordSalt FROM AuthorizedCredentials WHERE studentId = ?').get(student_id);
 
-    for (const row of rows) {
-      const studentHashMatches = bcrypt.compareSync(`${row.studentSalt}${student_id}`, row.studentIdHash);
-      const passwordHashMatches = bcrypt.compareSync(`${row.passwordSalt}${password}`, row.passwordHash);
+    if (!row) {
+      return 'Fail';
+    }
 
-      if (studentHashMatches && passwordHashMatches) {
-        return 'Success';
-      }
+    const passwordHashMatches = bcrypt.compareSync(`${row.passwordSalt}${password}`, row.passwordHash);
+
+    if (passwordHashMatches) {
+      return 'Success';
     }
 
     return 'Fail';
