@@ -30,8 +30,7 @@ function initializeDatabase() {
 
     CREATE TABLE IF NOT EXISTS AuthorizedCredentials (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      studentIdHash TEXT NOT NULL,
-      studentSalt TEXT NOT NULL,
+      studentId TEXT NOT NULL UNIQUE,
       passwordHash TEXT NOT NULL,
       passwordSalt TEXT NOT NULL,
       createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP

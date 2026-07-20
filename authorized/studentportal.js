@@ -57,14 +57,6 @@ export async function accountCreateAuthorized(student_id, password) {
         ? 'failure'
         : 'unknown';
 
-    console.log(JSON.stringify({
-      targetUrl: TARGET_URL,
-      successUrl: SUCCESS_URL,
-      failureUrl: FAILURE_URL,
-      currentUrl,
-      result
-    }, null, 2));
-
     return { result, currentUrl };
   } catch (error) {
     console.error('Student portal login check failed:', error);
