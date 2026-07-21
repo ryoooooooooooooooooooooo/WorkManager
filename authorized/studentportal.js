@@ -1,8 +1,5 @@
 import { chromium } from 'playwright';
-
-const TARGET_URL = 'https://navi.mars.kanazawa-it.ac.jp/portal/student';
-const SUCCESS_URL = 'https://navi.mars.kanazawa-it.ac.jp/portal/student/KITP0010001';
-const FAILURE_URL = 'https://navi.mars.kanazawa-it.ac.jp/portal/student/inKITP0000001LoginFailed';
+import { TARGET_URL, SUCCESS_URL, FAILURE_URL } from '../url.js';
 
 export async function accountCreateAuthorized(student_id, password) {
   const browser = await chromium.launch({

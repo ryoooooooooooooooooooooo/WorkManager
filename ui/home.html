@@ -19,48 +19,51 @@
     </style>
     </head>
     <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Work Manager</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-page="login.html">ログイン</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-page="create.html">新規</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-page="showInfo.html">提出課題一覧</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-   </div>
-</nav>
-    <script>
-      document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-        const page = this.getAttribute('data-page');
-        if (!page) return; 
-        
-        e.preventDefault();         fetch(page)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('content-area').innerHTML = html;
-            });
-    });
-});
-    </script>   
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Work Manager</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-page="login.html">ログイン</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-page="create.html">新規</a>
+              </li>
+            </ul>
+            <div class="d-flex ms-auto">
+              <span class="navbar-text me-3">学籍番号: {{STUDENT_ID}}</span>
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+          <script>
+            document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', function(e) {
+              const page = this.getAttribute('data-page');
+              if (!page) return; 
+              
+              e.preventDefault();         fetch(page)
+                  .then(response => response.text())
+                  .then(html => {
+                      document.getElementById('content-area').innerHTML = html;
+                  });
+          });
+      });
+          </script>   
 
-<div id="content-area" class="container mt-4">
-<!--open link below nav-bar -->
-</div>
+      <div id="content-area" class="container mt-4">
+        <h2>履修中の科目</h2>
+        <ul class="list-group">
+          {{SUBJECTS_LIST}}
+        </ul>
+      </div>
   </body>
 </html>
