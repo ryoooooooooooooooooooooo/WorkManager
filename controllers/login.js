@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { studentJudge } from '../authorized/studentJudge.js';
+import { ensureUserByStudentId, hasUserSubjects } from '../sqlite/setup.js';
+import { getSubject } from '../portalAction/getSubject.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +33,15 @@ export const postLogin = async (req, res) => {
   const result = await studentJudge(student_id, password);
 
   if (result === 'Success') {
+    await ensureUserByStudentId(String(student_id));
+    const shouldSyncSubjects = !hasUserSubjects(String(student_id));
+    if (shouldSyncSubjects) {
+      try {
+        await getSubject(student_id, password);
+      } catch (error) {
+        console.error(`初回履修科目取得に失敗しました: ${error.message}`);
+      }
+    }
     req.session.authenticated = true;
     req.session.student_id = student_id;
     req.session.password = password;

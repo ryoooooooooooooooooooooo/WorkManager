@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { getSubject } from '../portalAction/getSubject.js';
+import { getEnrollingSubjectsByStudentId } from '../sqlite/setup.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,12 +13,15 @@ export const getHome = async (req, res) => {
   }
   
   try {
-    // getSubject 関数を呼び出して履修中の科目を取得
-    const enrollingSubjects = await getSubject(req.session.student_id, req.session.password);
+    // DBから履修中の科目と担当教員を取得
+    const enrollingSubjects = getEnrollingSubjectsByStudentId(String(req.session.student_id));
     
-    // 科目リストをHTMLに変換
+    // 科目と担当教員リストをHTMLに変換
     const subjectsHtml = enrollingSubjects
-      .map(subject => `<li class="list-group-item">${subject}</li>`)
+      .map(({ subject, teacher }) => {
+        const teacherLabel = teacher ? `担当教員: ${teacher}` : '担当教員: 取得できませんでした';
+        return `<li class="list-group-item">${subject} <br><small>${teacherLabel}</small></li>`;
+      })
       .join('');
     
     let html = readFileSync(homePagePath, 'utf8');
