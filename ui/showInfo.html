@@ -1,10 +1,15 @@
 <!--show current homework etc...-->
 <body class="bg-light">
-
+<style>
+    #assignment-text{
+        color:black;
+        font-weight: 900;
+    }
+</style>
     <div class="container my-5">
         <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">提出宿題 一覧</h5>
+            <div class="card-header bg-light text-white d-flex justify-content-between align-items-center", id="Assignment">
+                <h5 class="mb-0", id="assignment-text">提出宿題 一覧</h5>
                 <span class="badge bg-light text-dark" id="task-count">0 件のタスク</span>
             </div>
             <div class="card-body p-0">
@@ -15,7 +20,6 @@
                                 <th style="width: 80px;">ID</th>
                                 <th>宿題名</th>
                                 <th>科目（担当）</th>
-                                <th>生徒名</th>
                                 <th>提出期限</th>
                             </tr>
                         </thead>

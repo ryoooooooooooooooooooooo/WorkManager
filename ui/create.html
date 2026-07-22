@@ -1,7 +1,12 @@
 <!--Sign up-->
   <body>
+    <style>
+      #signup{
+        font-weight: 550;
+      }
+    </style>
     <div class="container py-5">
-      <h1 class="mb-4">アカウント作成</h1>
+      <h1 class="mb-4", id="signup">アカウント作成</h1>
       <form action="/create" method="post" class="w-50">
         <div class="mb-3">
           <label for="studentId" class="form-label">学籍番号</label>
@@ -11,7 +16,7 @@
           <label for="password" class="form-label">パスワード</label>
           <input type="password" id="password" name="password" class="form-control" required />
         </div>
-        <button type="submit" class="btn btn-primary">create</button>
+        <button type="submit" class="btn btn-success">create</button>
       </form>
 
       <div class="mt-3">
