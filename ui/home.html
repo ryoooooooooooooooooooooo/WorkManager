@@ -16,6 +16,7 @@
         body{
             background-color: rgb(206, 206, 206);
         }
+      .list-group-item{ cursor: pointer; }
     </style>
     </head>
     <body>
@@ -68,5 +69,19 @@
           {{SUBJECTS_LIST}}
         </ul>
       </div>
+      <script>
+        // Make list-group items navigable to showInfo.html with subject query param
+        document.addEventListener('click', function(e){
+          const li = e.target.closest('li.list-group-item');
+          if(!li) return;
+          const subj = li.getAttribute('data-subject') || li.textContent.trim();
+          const teacher = li.getAttribute('data-teacher') || '';
+          if(!subj) return;
+          const params = new URLSearchParams();
+          params.set('subject', subj);
+          if(teacher) params.set('teacher', teacher);
+          window.location.href = 'showInfo.html?' + params.toString();
+        });
+      </script>
   </body>
 </html>

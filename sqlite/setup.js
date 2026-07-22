@@ -72,6 +72,64 @@ function getHomeworkList(){
     return query.all();
 }
 
+function getHomeworkListFiltered(subjectName, teacherName){
+  let query;
+  if(subjectName && teacherName){
+    query = db.prepare(`
+      SELECT
+        h.HomeWorkId,
+        h.HomeWorkName,
+        h.deadline,
+        s.subjectName,
+        s.teacherName,
+        u.studentName
+      FROM Homework h
+      INNER JOIN Subjects s ON h.subjectId = s.subjectId
+      INNER JOIN Users u ON h.userId = u.userId
+      WHERE s.subjectName = ? AND s.teacherName = ?
+      `);
+    return query.all(subjectName, teacherName);
+  }
+  if(subjectName){
+    query = db.prepare(`
+      SELECT
+        h.HomeWorkId,
+        h.HomeWorkName,
+        h.deadline,
+        s.subjectName,
+        s.teacherName,
+        u.studentName
+      FROM Homework h
+      INNER JOIN Subjects s ON h.subjectId = s.subjectId
+      INNER JOIN Users u ON h.userId = u.userId
+      WHERE s.subjectName = ?
+      `);
+    return query.all(subjectName);
+  }
+  return getHomeworkList();
+}
+
+function saveHomework(homeWorkName, deadline, subjectName, teacherName, studentId){
+  if(!homeWorkName || !deadline || !subjectName) return { success: false, message: 'invalid input' };
+
+  // ensure subject exists
+  saveSubject(subjectName, teacherName || '');
+  const subjectId = getSubjectId(subjectName, teacherName || '');
+  if(!subjectId) return { success: false, message: 'subject not found' };
+
+  // ensure user exists
+  let userId = getUserIdByStudentId(studentId);
+  if(!userId){
+    userId = ensureUserByStudentId(studentId);
+  }
+
+  const stmt = db.prepare(
+    `INSERT INTO Homework (HomeWorkName, deadline, subjectId, userId) VALUES (?, ?, ?, ?)`
+  );
+  const result = stmt.run(homeWorkName, deadline, subjectId, userId);
+  return { success: result.changes > 0, lastInsertRowid: result.lastInsertRowid };
+}
+
 function getEnrollingSubjectsByStudentId(studentId) {
   const query = db.prepare(`
     SELECT s.subjectName AS subject, s.teacherName AS teacher
@@ -161,4 +219,17 @@ function ensureUserByStudentId(studentId, studentName = studentId) {
   return row ? row.userId : null;
 }
 
-export { db, initializeDatabase, getHomeworkList, getEnrollingSubjectsByStudentId, saveSubjects, saveUserSubjects, getSubjectId, getUserIdByStudentId, ensureUserByStudentId, hasUserSubjects };
+export { 
+  db, 
+  initializeDatabase, 
+  getHomeworkList, 
+  getEnrollingSubjectsByStudentId, 
+  saveSubjects, 
+  saveUserSubjects, 
+  getSubjectId, 
+  getUserIdByStudentId, 
+  ensureUserByStudentId, 
+  hasUserSubjects,
+  getHomeworkListFiltered,
+  saveHomework
+};
