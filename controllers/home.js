@@ -20,7 +20,10 @@ export const getHome = async (req, res) => {
     const subjectsHtml = enrollingSubjects
       .map(({ subject, teacher }) => {
         const teacherLabel = teacher ? `担当教員: ${teacher}` : '担当教員: 取得できませんでした';
-        return `<li class="list-group-item">${subject} <br><small>${teacherLabel}</small></li>`;
+        // include data attributes for subject and teacher for later navigation
+        const safeSubject = subject.replace(/"/g, '&quot;');
+        const safeTeacher = (teacher || '').replace(/"/g, '&quot;');
+        return `<li class="list-group-item" data-subject="${safeSubject}" data-teacher="${safeTeacher}">${subject} <br><small>${teacherLabel}</small></li>`;
       })
       .join('');
     
