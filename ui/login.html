@@ -1,7 +1,12 @@
  <!--Login-->
   <body>
+    <style>
+      #login-text{
+        font-weight: 600;
+      }
+    </style>
     <div class="container py-5">
-      <h1 class="mb-4">ログイン</h1>
+      <h1 class="mb-4", id="login-text">ログイン</h1>
       <form action="/login" method="post" class="w-50">
         <div class="mb-3">
           <label for="studentId" class="form-label">学籍番号</label>
@@ -11,7 +16,7 @@
           <label for="password" class="form-label">パスワード</label>
           <input type="password" id="password" name="password" class="form-control" required />
         </div>
-        <button type="submit" class="btn btn-primary">login</button>
+        <button type="submit" class="btn btn-success">login</button>
       </form>
     </div>
   </body>
